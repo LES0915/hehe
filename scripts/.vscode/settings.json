@@ -1,0 +1,15 @@
+{
+    "ros.distro": "noetic",
+    "python.autoComplete.extraPaths": [
+        "/home/ubuntu/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/ubuntu/carla/PythonAPI/carla/dist/carla-0.9.13-py3.7-linux-x86_64.egg",
+        "home/ubuntu/carla/PythonAPI/carla"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/ubuntu/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/ubuntu/carla/PythonAPI/carla/dist/carla-0.9.13-py3.7-linux-x86_64.egg",
+        "home/ubuntu/carla/PythonAPI/carla"
+    ]
+}

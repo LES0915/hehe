@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+import rospy
+from geometry_msgs.msg import Twist
+
+import rospy
+import tf2_ros
+import tf2_geometry_msgs
+from geometry_msgs.msg import PoseStamped
+
+rospy.init_node('aruco_marker_offset')
+
+tf_buffer = tf2_ros.Buffer()
+tf_listener = tf2_ros.TransformListener(tf_buffer)
+
+aruco_marker_frame = 'fiducial_14'
+base_frame = 'camera_link'
+
+pub = rospy.Publisher('/tello/cmd_vel', Twist, queue_size=10)
+
+while not rospy.is_shutdown():
+    try:
+        # Get the transform from the base frame to the ArUco marker frame
+        transform = tf_buffer.lookup_transform(
+            base_frame, aruco_marker_frame, rospy.Time(0), rospy.Duration(1))
+
+        # Convert the transform to a PoseStamped message for easy manipulation
+        pose = tf2_geometry_msgs.do_transform_pose(PoseStamped(), transform)
+
+        # Extract the x, y, z offsets from the pose
+        x_offset = pose.pose.position.x
+        y_offset = pose.pose.position.y
+        z_offset = pose.pose.position.z
+
+        # Print the offsets
+        rospy.loginfo('ArUco marker offset from base frame: x={}, y={}, z={}'.format(
+            x_offset, y_offset, z_offset))
+
+        twist = Twist()
+
+        distance = 0.05
+        limit = 0.8
+
+        if x_offset < -distance:
+            twist.angular.z = x_offset*5
+            if twist.angular.z < -limit:
+                twist.angular.z = -limit
+        elif x_offset > distance:
+            twist.angular.z = x_offset*5
+            if twist.angular.z > limit:
+                twist.angular.z = limit
+        else:
+            twist.angular.z = 0
+
+        if y_offset < -distance:
+            twist.linear.z = -y_offset*5
+            if twist.linear.z < -limit:
+                twist.linear.z = -limit
+        elif y_offset > distance:
+            twist.linear.z = -y_offset*5
+            if twist.linear.z > limit:
+                twist.linear.z = limit
+        else:
+            twist.linear.z = 0
+
+        twist.linear.y = 0
+        twist.linear.x = 0
+
+        twist.angular.y = 0.0
+        twist.angular.x = 0.0
+
+        # rospy.loginfo('twist.linear.z:{}, twist.angular.z={}'.format(twist.linear.z, twist.angular.z))
+
+        pub.publish(twist)
+
+    except:
+        continue
