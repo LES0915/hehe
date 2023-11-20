@@ -1,0 +1,11 @@
+<launch>
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <param name="model" value="$(arg model)"/>
+  <arg name="namespace" default="tello" />
+
+  <group ns="$(arg namespace)">
+  <!-- turtlebot3_teleop_key already has its own built in velocity smoother -->
+    <node pkg="drone_teleop" type="drone_teleop_key" name="drone_teleop_keyboard"  output="screen">
+    </node>
+  </group>
+</launch>
