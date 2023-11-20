@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<launch>
-    <node pkg="tello_tracker" type="track_aruco_pid_target" name="track_aruco_pid_target" output="screen"/>
-    <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0.5 0 0 0 1 fiducial_14 target"/>
-    <include file="$(find aruco_detect)/launch/aruco_detect.launch"/>
-    <include file="$(find tello_driver)/launch/tello_node.launch"/>
-</launch>
